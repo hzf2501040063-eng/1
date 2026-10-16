@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>锐盘</title>
+<style>
+:root{--bg:#10140f;--sf:#181e19;--sf2:#232b24;--fg:#f4f7f1;--mu:#9aa89b;--ln:#314036;--ac:#d6f25c;--acfg:#14200a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f5f7f2;--sf:#fff;--sf2:#e8ede4;--fg:#162016;--mu:#5d6c5e;--ln:#cfd8ca;--ac:#2f6b0f;--acfg:#fff;color-scheme:light}}
+:root[data-theme="dark"]{--bg:#10140f}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;overflow-x:hidden}
+.m{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+main{max-width:720px;margin:0 auto;padding:18px 14px 96px}
+h1{margin:0;font-size:34px;letter-spacing:-.02em}
+.sub{color:var(--mu);font-size:13px;margin:6px 0 0}
+.tag{display:inline-block;margin-top:10px;padding:2px 8px;border:1px solid var(--ac);border-radius:6px;color:var(--ac);font-size:12px}
+.row{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:2px}
+.chip{flex:none;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--ln);background:var(--sf);color:var(--fg);font:inherit;font-size:14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ac);color:var(--acfg);border-color:var(--ac);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.st{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px}
+.st b{display:block;font-size:22px;margin-top:2px}.st span{font-size:12px;color:var(--mu)}
+.card{display:block;width:100%;text-align:left;margin-top:8px;padding:12px;background:var(--sf);border:1px solid var(--ln);border-radius:10px;color:inherit;font:inherit;cursor:pointer}
+.top{display:flex;justify-content:space-between;font-size:12px;color:var(--mu)}
+.team{display:flex;justify-content:space-between;margin-top:6px;font-weight:500}
+.px{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pc{background:var(--bg);border-radius:8px;padding:6px 8px;font-size:12px;color:var(--mu)}
+.pc b{display:block;color:var(--fg);font-size:15px;font-weight:500}
+.pc.best{outline:1px solid var(--ac)}
+.ev{color:var(--ac);font-weight:600}.live{color:var(--ac)}
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;background:rgba(0,0,0,.6)}
+.sheet>div{width:100%;max-height:88dvh;overflow:auto;background:var(--sf);border-radius:14px 14px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));max-width:720px;margin:0 auto}
+.oc{border:1px solid var(--ln);border-radius:10px;padding:10px;margin-top:10px}
+.oc.best{border-color:var(--ac)}
+.btn{min-height:44px;width:100%;margin-top:8px;border-radius:10px;border:1px solid var(--ln);background:transparent;color:var(--fg);font:inherit;font-size:13px;cursor:pointer}
+.btn[aria-pressed=true]{background:var(--ac);color:var(--acfg);border-color:var(--ac);font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slip{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--sf);border-top:1px solid var(--ac);padding-bottom:env(safe-area-inset-bottom,0px)}
+.slip>div{max-width:720px;margin:0 auto;padding:0 14px}
+.sh{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:50px;background:none;border:0;color:var(--fg);font:inherit;font-weight:600;cursor:pointer}
+.sb{max-height:58dvh;overflow:auto;padding-bottom:14px}
+.leg{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:13px}
+.leg div{flex:1;min-width:0}.leg small{display:block;color:var(--mu)}
+.x{min-width:44px;min-height:44px;background:none;border:0;color:var(--mu);font-size:20px;cursor:pointer}
+input{height:44px;border-radius:10px;border:1px solid var(--ln);background:var(--bg);color:var(--fg);padding:0 10px;font:inherit;font-size:14px;min-width:0}
+input:focus,button:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.note{font-size:12px;color:var(--mu);margin:8px 0 0;line-height:1.6}
+.cl{display:flex;gap:8px;margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+  <h1>锐盘</h1>
+  <p class="sub">赛果、盘口移动与期望值，串关一起算。</p>
+  <span class="tag" id="tag">加载中…</span>
+  <div class="row" id="days"></div>
+  <div class="row" id="sports"></div>
+  <div class="stats" id="stats"></div>
+  <div id="list"></div>
+  <p class="note">赛程和赔率来自公开体育数据接口；连不上时自动显示模拟数据，顶部会标注。仅供概率研究，不能下注，未满 18 岁请离开。</p>
+</main>
+<div id="sheet"></div>
+<div class="slip" id="slip"></div>
+<script src="s1.js"></script>
+<script src="s2.js"></script>
+<script src="s3.js"></script>
+<script src="s4.js"></script>
+
+</body>
+</html>
