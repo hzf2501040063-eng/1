@@ -27,8 +27,8 @@ async function loadReal(){
  const now=Date.now(),from=now-72*36e5,to=now+76*36e5,ymd=t=>new Date(t).toISOString().slice(0,10).replace(/-/g,"");
  const range=ymd(from-12*36e5)+"-"+ymd(to+12*36e5);
  const res=await Promise.all(LG.map(async lg=>{try{
-  const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/"+lg[0]+"/"+lg[1]+"/scoreboard?dates="+range+"&limit=300",{signal:AbortSignal.timeout(8000)});
-  if(!r.ok)return null;const j=await r.json();
+  const targetUrl = "https://site.api.espn.com/apis/site/v2/sports/"+lg[0]+"/"+lg[1]+"/scoreboard?dates="+range+"&limit=300";
+const r = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl), {signal:AbortSignal.timeout(8000)});
   return(j.events||[]).map(e=>parseEv(e,[lg[0],lg[2],lg[3],lg[1]],from,to)).filter(Boolean)}catch(e){return null}}));
  if(res.every(x=>x===null))return null;
  return res.flat().filter(Boolean).sort((a,b)=>a[14]-b[14]);
